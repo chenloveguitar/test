@@ -5,6 +5,15 @@ public class MusicTest {
 	// ̲6
 	private static final int[] notes = { 0x0063, 0x0064, 0x0065, 0x0066, 0x0067, 0x0061, 0x0062 };// c-b
 	private static final int[] NOTES = { 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0041, 0x0042 };// C-B
+	// 
+				//      7          1     
+				//     3 7         2     
+				//    6 3 7        3     
+				//   2 6 3 7       4     
+				//  5 2 6 3 7      5     
+				// 1 5 2 6 3 7     6
+				//4 1 5 2 6 3 7    7
+	private static final int[][] sharpArray = {{7},{3,7},{6,3,7},{2,6,3,7},{5,2,6,3,7},{4,1,5,2,6,3,7}};
 	private static final int QUAVER = 0x0332;// ̲
 	private static final int SEMIQUAVER = 0x0;// ̣
 	// 以下字符支持QQ聊天窗口发送
