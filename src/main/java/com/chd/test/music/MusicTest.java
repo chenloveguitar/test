@@ -1,132 +1,172 @@
 package com.chd.test.music;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class MusicTest {
 
-	// ̲6
-	private static final int[] notes = { 0x0063, 0x0064, 0x0065, 0x0066, 0x0067, 0x0061, 0x0062 };// c-b
-	private static final int[] NOTES = { 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0041, 0x0042 };// C-B
-	// 
-				//      7          1     
-				//     3 7         2     
-				//    6 3 7        3     
-				//   2 6 3 7       4     
-				//  5 2 6 3 7      5     
-				// 1 5 2 6 3 7     6
-				//4 1 5 2 6 3 7    7
-	private static final int[][] sharpArray = {{7},{3,7},{6,3,7},{2,6,3,7},{5,2,6,3,7},{4,1,5,2,6,3,7}};
-	private static final int QUAVER = 0x0332;// ̲
-	private static final int SEMIQUAVER = 0x0;// ̣
-	// 以下字符支持QQ聊天窗口发送
-	private static final int FLAT = 0x266d;// ♭
-	private static final int NATURE = 0x266e;// ♮
-	private static final int SHARP = 0x266f;// ♯
+	private static char[] notes = { 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067 };// c-b
+	private static char[] NOTES = { 0x0043, 0x0044, 0x0045, 0x0046, 0x0047, 0x0041, 0x0042 };// C-B
+	private static final char FLAT = 0x266d;// ♭
+	private static final char NATURE = 0x266e;// ♮
+	private static final char SHARP = 0x266f;// ♯
+	private static final Map<String, String[]> naturalMajorScaleMap = new LinkedHashMap<String,String[]>();
+	private static final Map<String, String[]> naturalMinorScaleMap = new LinkedHashMap<String,String[]>();
 
-	// ⌒¨22 ̲ 6̣
 	public static void main(String[] args) {
-
-//		for (int i = 0x0100; i < 0x0500 + 10; i++) {
-//			System.out.printf("%c%s%x%s", i, "\t", i, "\n");
+		
+		printScale();
+		
+//		for (int i = 0; i < notes.length; i++) {
+//			System.out.println(notes[i]);
 //		}
-		for (int i = 0,num = 7; i < NOTES.length; i++) {
-			for (int j = 0; j <= i ; j++) {
-				int n = num >> j == 0 ? num : num >> j;
-				n = n >= 3 ? num >> j : (n << j) + j;
-				System.out.print(n);
-			}
-			System.out.println();
+	}
+	
+	//打印大调音阶
+	public static void printScale() {
+//		sharpMajorScale();//计算带#记号的音阶
+//		flatMajorScale();//计算带b记号的音阶
+//		System.out.println("自然大调各调音阶:");
+//		Set<String> majorSet = naturalMajorScaleMap.keySet();
+//		Iterator<String> majorIterator = majorSet.iterator();
+//		while(majorIterator.hasNext()) {//遍历出所有音阶
+//			String next = majorIterator.next();
+//			String[] strings = naturalMajorScaleMap.get(next);
+//			System.out.println(next+"大调:"+Arrays.toString(strings));
+//		}
+		
+		sharpMinorScale();
+		flatMinorScale();
+		System.out.println("自然小调各调音阶:");
+		Set<String> minorSet = naturalMinorScaleMap.keySet();
+		Iterator<String> minorIterator = minorSet.iterator();
+		while(minorIterator.hasNext()) {//遍历出所有音阶
+			String next = minorIterator.next();
+			String[] strings = naturalMinorScaleMap.get(next);
+			System.out.println(next+"小调:"+Arrays.toString(strings));
+		}
+	}
+	
+	/**
+	 * 标有♭记号的notes,数组逆序查找
+	 */
+	public static void 	flatMinorScale() {
+		int length = notes.length;
+		String[] array = new String[length + 1];
+		for (int i = 0; i <= notes.length; i++) {
+			array[i] = notes[i % length] + "";
 		}
 		
-		System.out.println();
-//		printNotes();
-		// a加上不占位置的字符
-		// int start = 0x0300;
-		// int end = 0x036f;
-		// for(int i = start; i < end;i++) {
-		// System.out.printf("%c%s%s",i,"a,","\n");
-		// }
-
-		// ̲6̲6̲6
-		// System.out.printf("%c",0x0332);
-		// System.out.printf("%c",0x0036);
-		// System.out.printf("%c",0x0332);
-		// System.out.printf("%c",0x0036);
-		// System.out.printf("%c",0x0332);
-		// System.out.printf("%c",0x0036);
-
+		for (int i = length; i >= 0; i--) {
+			int current = ((i * 5) - i) % length;
+			String note = array[current];
+			String[] str = new String[length + 1];
+			for (int j = 0; j <= length; j++) {
+				int index = (current + j) % length;
+				String c = array[index];
+				if(j == 3 && i != length) {
+					str[j] = FLAT + "" + c;
+					array[index] = FLAT + "" + c;
+				}else {
+					str[j] = c;
+					array[index] = c;
+				}
+			}
+			naturalMinorScaleMap.put(note, str);
+		}
 	}
-
-	public static void printNotes() {
-		int length = NOTES.length;
+	
+	
+	/**
+	 * 标有♯记号的notes,数组正序查找
+	 */
+	public static void 	sharpMinorScale() {
+		
+		int length = notes.length;
+		String[] array = new String[length + 1];
+		for (int i = 0; i <= notes.length; i++) {
+			array[i] = notes[i % length] + "";
+		}
+		
 		for (int i = 0; i <= length; i++) {
 			int current = ((i * 5) - i) % length;
-			int next = ((i + 1) * 5 - (i + 1)) % length;
-			int note = NOTES[current];
-			if(i == 6 || i == 7) {
-				System.out.printf("%c%c%s", SHARP, note, ":");
-			}else {
-				System.out.printf("%c%s", note, ":");
-			}
-			// System.out.println();
-			// 7/2 = 3; 7 3
-			// 
-			//      7          1     
-			//     3 7         2     
-			//    6 3 7        3     
-			//   2 6 3 7       4     
-			//  5 2 6 3 7      5     
-			// 1 5 2 6 3 7     6
-			//4 1 5 2 6 3 7    7
-			
-			//7/2
-			
-			// 第一次循环 7-i = 7; i = 0
-			// 第二次循环 7-i/2 = 3; i = 1;
-			// 第三次循环 7-i*2 = 6; i = 2;
-			int[] previous = new int[7];
+			String note = array[current];
+			String[] str = new String[length + 1];
 			for (int j = 0; j <= length; j++) {
-				for(int k = 0; k <= length; k++) {
-				}
-				if(j == 6 && i != 0) {
-					System.out.printf("%c%c%s", SHARP, NOTES[(current + j) % length], "\t");
+				int index = (current + j) % length;
+				String c = array[index];
+				if(j == 1 && i != 0) {
+					str[j] = SHARP + "" + c;
+					array[index] = SHARP + "" + c;
 				}else {
-					System.out.printf("%c%s", NOTES[(current + j) % length], "\t");
+					str[j] = c;
+					array[index] = c;
 				}
-				previous[j] = NOTES[(current + j) % length];
 			}
-			System.out.println();
+			naturalMinorScaleMap.put(note, str);
 		}
 	}
 
-	/* 该方法无法将F/C 转换成 #E/#B 的形式,故需从新定义算法 */
-	public static void bate1() {
-
-		String[] sharp = { "C", "#C", "D", "#D", "E", "F", "#F", "G", "#G", "A", "#A", "B" };
-		String[] flat = { "C", "bD", "D", "bE", "E", "F", "bG", "G", "bA", "A", "bB", "B" };
-
-		int mark = 7;// 7个半音
-		int index = 0;
-		for (int i = 0; i <= 7; i++) {
-			String keynote = sharp[index];
-			System.out.println(i + "个#为:");
-			System.out.print(keynote + "大调音阶:");
-			int flag = index;
-			for (int j = 0; j < 8; j++) {
-				String note = sharp[flag];
-				System.out.print(note + ",");
-				if (j == 2 || j == 6) {
-					flag = flag + 1;
-				} else {
-					flag = flag + 2;
-				}
-				if (flag >= 12) {
-					flag -= 12;
+	/**
+	 * 标有♭记号的notes,数组逆序查找
+	 */
+	public static void 	flatMajorScale() {
+		int length = NOTES.length;
+		String[] array = new String[length + 1];
+		for (int i = 0; i <= NOTES.length; i++) {
+			array[i] = NOTES[i % length] + "";
+		}
+		
+		for (int i = length; i >= 0; i--) {
+			int current = ((i * 5) - i) % length;
+			String note = array[current];
+			String[] str = new String[length + 1];
+			for (int j = 0; j <= length; j++) {
+				int index = (current + j) % length;
+				String c = array[index];
+				if(j == 3 && i != length) {
+					str[j] = FLAT + "" + c;
+					array[index] = FLAT + "" + c;
+				}else {
+					str[j] = c;
+					array[index] = c;
 				}
 			}
-			System.out.println("");
-			index += mark;
-			if (index >= 12) {
-				index -= 12;
+			naturalMajorScaleMap.put(note, str);
+		}
+	}
+	
+	
+	/**
+	 * 标有♯记号的notes,数组正序查找
+	 */
+	public static void 	sharpMajorScale() {
+		
+		int length = NOTES.length;
+		String[] array = new String[length + 1];
+		for (int i = 0; i <= NOTES.length; i++) {
+			array[i] = NOTES[i % length] + "";
+		}
+		
+		for (int i = 0; i <= length; i++) {
+			int current = ((i * 5) - i) % length;
+			String note = array[current];
+			String[] str = new String[length + 1];
+			for (int j = 0; j <= length; j++) {
+				int index = (current + j) % length;
+				String c = array[index];
+				if(j == 6 && i != 0) {
+					str[j] = SHARP + "" + c;
+					array[index] = SHARP + "" + c;
+				}else {
+					str[j] = c;
+					array[index] = c;
+				}
 			}
+			naturalMajorScaleMap.put(note, str);
 		}
 	}
 }
