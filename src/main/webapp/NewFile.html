@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body style="font-size: 200px;text-align: center;margin:200px 500px;">
+
+<script type="text/javascript">
+	var array = ["C","#C","D","#D","E","F","#F","G","#G","A","#A","B"];
+	var bpm = 240;
+	var time = bpm/60 * 1000;
+	setInterval(function(){
+		var num = parseInt(Math.random() * 12);
+		document.body.innerHTML = array[num];
+	},time);
+</script>
+</body>
+</html>

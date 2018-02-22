@@ -27,16 +27,16 @@ public class MusicTest {
 	
 	//打印大调音阶
 	public static void printScale() {
-//		sharpMajorScale();//计算带#记号的音阶
-//		flatMajorScale();//计算带b记号的音阶
-//		System.out.println("自然大调各调音阶:");
-//		Set<String> majorSet = naturalMajorScaleMap.keySet();
-//		Iterator<String> majorIterator = majorSet.iterator();
-//		while(majorIterator.hasNext()) {//遍历出所有音阶
-//			String next = majorIterator.next();
-//			String[] strings = naturalMajorScaleMap.get(next);
-//			System.out.println(next+"大调:"+Arrays.toString(strings));
-//		}
+		sharpMajorScale();//计算带#记号的音阶
+		flatMajorScale();//计算带b记号的音阶
+		System.out.println("自然大调各调音阶:");
+		Set<String> majorSet = naturalMajorScaleMap.keySet();
+		Iterator<String> majorIterator = majorSet.iterator();
+		while(majorIterator.hasNext()) {//遍历出所有音阶
+			String next = majorIterator.next();
+			String[] strings = naturalMajorScaleMap.get(next);
+			System.out.println(next+"大调:"+Arrays.toString(strings));
+		}
 		
 		sharpMinorScale();
 		flatMinorScale();
